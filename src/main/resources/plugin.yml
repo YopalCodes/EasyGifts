@@ -1,0 +1,8 @@
+name: EasyGifts
+version: '${project.version}'
+main: com.yopal.easygifts.EasyGifts
+api-version: 1.19
+commands:
+  ezg:
+  accept:
+  deny:
