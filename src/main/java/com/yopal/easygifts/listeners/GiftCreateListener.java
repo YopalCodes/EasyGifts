@@ -72,21 +72,26 @@ public class GiftCreateListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         ItemStack itemStack = e.getItem();
 
-        if (itemStack == null) {
-            return;
-        }
-
         if (e.getClickedBlock() == null) {
             return;
         }
 
         if (!e.getClickedBlock().getType().equals(Material.CHEST)) {
-             return;
+            return;
+        }
+
+        if (itemStack == null) {
+            return;
         }
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        NamespacedKey receiverKey = new NamespacedKey(gifts, "receiverUUID");
         PersistentDataContainer itemPDC = itemMeta.getPersistentDataContainer();
+
+        if (!itemPDC.has(giftTypeKey, PersistentDataType.STRING)) {
+            return;
+        }
+
+        NamespacedKey receiverKey = new NamespacedKey(gifts, "receiverUUID");
 
         GiftTypes giftType = GiftTypes.valueOf(itemPDC.get(giftTypeKey, PersistentDataType.STRING));
         Chest chest = (Chest) e.getClickedBlock().getState();
@@ -105,6 +110,11 @@ public class GiftCreateListener implements Listener {
         }
 
         if (blockPDC.has(receiverKey, PersistentDataType.STRING)) {
+            return;
+        }
+
+        if (!checkBlockAboveChest(chest.getLocation().add(0,1,0))) {
+            PlayerInteract.sendMessage(playerUUID, ChatColor.RED + "There's a block above the chest!");
             return;
         }
 
@@ -201,6 +211,18 @@ public class GiftCreateListener implements Listener {
 
         return new Location(Bukkit.getWorld(worldName), x, y, z);
 
+    }
+
+    public boolean checkBlockAboveChest(Location loc) {
+        while (loc.getY() < 256) {
+            if (loc.getBlock().getType() != Material.AIR) {
+                return false;
+            }
+
+            loc.add(0,1,0);
+        }
+
+        return true;
     }
 
 }

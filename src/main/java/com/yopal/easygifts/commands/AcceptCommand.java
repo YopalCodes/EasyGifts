@@ -54,10 +54,16 @@ public class AcceptCommand implements CommandExecutor {
 
         if (!receiver.isOnGround()) {
             PlayerInteract.sendMessage(receiverUUID, ChatColor.RED + "Please be on the ground!");
+            return false;
         }
 
         if (!checkLocation(receiver.getLocation())) {
             PlayerInteract.sendMessage(receiverUUID, ChatColor.RED + "Please be between the height limit and the void! (15-256)");
+            return false;
+        }
+
+        if (!checkBlockAbovePlayer(receiver.getEyeLocation())) {
+            PlayerInteract.sendMessage(receiverUUID, ChatColor.RED + "There's a block above you!");
             return false;
         }
 
@@ -88,6 +94,6 @@ public class AcceptCommand implements CommandExecutor {
             loc.add(0,1,0);
         }
 
-        return false;
+        return true;
     }
  }

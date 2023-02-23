@@ -20,6 +20,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.Random;
 import java.util.UUID;
@@ -49,17 +50,16 @@ public class GiftTransport {
         this.playerKey = new NamespacedKey(gifts, "playerUUID");
         this.receiverKey = new NamespacedKey(gifts, "receiverUUID");
         this.giftType = giftType;
-        setUpArmorStand();
 
         startShaking();
     }
 
-    public void setUpArmorStand() {
-        Directional chestDirection = (Directional) chest.getBlockData();
-        BlockFace blockFace = chestDirection.getFacing();
-        ogLoc.setYaw(returnYawFromFace(blockFace));
+    public void changeArmorStand(UUID armorStandUUID) {
+        ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(armorStandUUID);
 
-        ArmorStand armorStand = (ArmorStand) ogLoc.getWorld().spawnEntity(ogLoc, EntityType.ARMOR_STAND);
+        if (armorStand == null) {
+            return;
+        }
 
         // locks
         armorStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING_OR_CHANGING);
@@ -75,12 +75,17 @@ public class GiftTransport {
         armorStand.setInvulnerable(true);
         armorStand.setVisible(false);
         armorStand.setSmall(true);
-
-        this.launchStandUUID = armorStand.getUniqueId();
     }
 
     public void startShaking() {
-        ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(launchStandUUID);
+        Directional chestDirection = (Directional) chest.getBlockData();
+        BlockFace blockFace = chestDirection.getFacing();
+        ogLoc.setYaw(returnYawFromFace(blockFace));
+
+        ArmorStand armorStand = (ArmorStand) ogLoc.getWorld().spawnEntity(ogLoc, EntityType.ARMOR_STAND);
+        changeArmorStand(armorStand.getUniqueId());
+        this.launchStandUUID = armorStand.getUniqueId();
+
         Location centerLoc = armorStand.getLocation();
         chest.getBlock().setType(Material.AIR);
 
@@ -104,11 +109,18 @@ public class GiftTransport {
     }
 
     public void startLanding() {
+        OfflinePlayer receiver = Bukkit.getOfflinePlayer(receiverUUID);
+        if (receiver.isOnline()) {
+            targetLoc.setYaw(receiver.getPlayer().getLocation().getYaw()-180);
+        }
 
         ArmorStand landingStand = (ArmorStand) targetLoc.getWorld().spawnEntity(targetLoc.add(0,100,0), EntityType.ARMOR_STAND);
+        changeArmorStand(landingStand.getUniqueId());
         this.landStandUUID = landingStand.getUniqueId();
+
         this.checkLoc = Bukkit.getScheduler().runTaskTimer(gifts, () -> {
             checkLocation(targetLoc);
+
             if (landingStand.getLocation().getY() - targetLoc.getY() < 20) {
                 landingStand.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 1, 1, true, false));
             }
@@ -154,11 +166,13 @@ public class GiftTransport {
         if (landingStand.isOnGround() && landStandLoc.getY() >= 256) {
             checkLoc.cancel();
             cancelTransport();
+            return;
         }
 
-        if (landingStand.isOnGround() && landStandLoc == targetLoc) {
+        if (landingStand.isOnGround() && landStandLoc.getY() == targetLoc.getY()) {
             checkLoc.cancel();
             finishTransport();
+            return;
         }
 
     }
