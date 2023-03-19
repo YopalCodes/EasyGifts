@@ -3,6 +3,7 @@ package com.yopal.easygifts.commands;
 import com.sun.net.httpserver.Request;
 import com.yopal.easygifts.EasyGifts;
 import com.yopal.easygifts.enums.GiftTypes;
+import com.yopal.easygifts.utils.GUI;
 import com.yopal.easygifts.utils.PlayerInteract;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -34,11 +35,6 @@ public class GiftCommand implements CommandExecutor {
             return false;
         }
 
-        if (offlineReceiver.getPlayer() == null) {
-            PlayerInteract.sendInvalidUsage(player, "The player has to be online!");
-            return false;
-        }
-
         Player receiver = offlineReceiver.getPlayer();
 
         if (receiver.getUniqueId().equals(player.getUniqueId())) {
@@ -57,6 +53,8 @@ public class GiftCommand implements CommandExecutor {
         Gift Particles: none (default), fire, water, ender, air, firework
         Inventory: have an inventory to deposit the items for the gift
          */
+
+        new GUI(player, receiver);
         return false;
     }
 
