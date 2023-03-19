@@ -4,4 +4,6 @@ public enum UtilTypes {
     MESSAGE,
     TITLE,
     TITLEWITHSUB,
+    FANCY,
+    ACTIONBAR,
 }

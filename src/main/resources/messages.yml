@@ -1,0 +1,6 @@
+# %gifter% - refers to player
+# %receiver% - refers to receiver
+
+NONE:
+  # if the chest was opened by the receiver
+  chestOpenReceiver: "Say thanks to %gifter%"
