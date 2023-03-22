@@ -4,10 +4,11 @@ import com.yopal.easygifts.utils.GUI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GUIManager {
-    private static List<GUI> GUIList;
+    private static List<GUI> GUIList = new ArrayList<>();
 
     public static void addGUI(GUI gui) {
         GUIList.add(gui);
@@ -17,9 +18,9 @@ public class GUIManager {
         GUIList.remove(gui);
     }
 
-    public static GUI getGUI(Player player, OfflinePlayer receiver) {
+    public static GUI getGUI(Player player) {
         for (GUI gui : GUIList) {
-            if (gui.getPlayer() == player && gui.getReceiver() == receiver) {
+            if (gui.getPlayer() == player) {
                 return gui;
             }
         }

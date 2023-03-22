@@ -3,6 +3,7 @@ package com.yopal.easygifts.commands;
 import com.sun.net.httpserver.Request;
 import com.yopal.easygifts.EasyGifts;
 import com.yopal.easygifts.enums.GiftTypes;
+import com.yopal.easygifts.managers.GUIManager;
 import com.yopal.easygifts.utils.GUI;
 import com.yopal.easygifts.utils.PlayerInteract;
 import org.bukkit.*;
@@ -28,14 +29,12 @@ public class GiftCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        OfflinePlayer offlineReceiver = Bukkit.getOfflinePlayer(args[0]);
+        OfflinePlayer receiver = Bukkit.getOfflinePlayer(args[0]);
 
-        if (offlineReceiver == null) {
+        if (receiver == null) {
             PlayerInteract.sendInvalidUsage(player, "That's not a player");
             return false;
         }
-
-        Player receiver = offlineReceiver.getPlayer();
 
         if (receiver.getUniqueId().equals(player.getUniqueId())) {
             PlayerInteract.sendInvalidUsage(player, "Send a gift to someone besides yourself!");
@@ -54,7 +53,8 @@ public class GiftCommand implements CommandExecutor {
         Inventory: have an inventory to deposit the items for the gift
          */
 
-        new GUI(player, receiver);
+        GUIManager.addGUI(new GUI(player, receiver));
+
         return false;
     }
 

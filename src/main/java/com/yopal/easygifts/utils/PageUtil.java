@@ -1,5 +1,8 @@
 package com.yopal.easygifts.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -8,7 +11,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class PageUtil {
 
@@ -22,16 +28,16 @@ public class PageUtil {
     public static void createFrames(Inventory inv, ItemStack frameItem, int topLeftSlot, int bottomRightSlot) {
         // making sure item doesn't have display name
         ItemMeta itemMeta = frameItem.getItemMeta();
-        itemMeta.setDisplayName("");
+        itemMeta.setDisplayName(" ");
         frameItem.setItemMeta(itemMeta);
 
         // top row
-        for (int i = topLeftSlot; i < topLeftSlot + 8; i++) {
+        for (int i = topLeftSlot; i < topLeftSlot + 9; i++) {
             inv.setItem(i, frameItem);
         }
 
         // bottom row
-        for (int i = bottomRightSlot; i < bottomRightSlot - 8; i--) {
+        for (int i = bottomRightSlot; i > bottomRightSlot - 9; i--) {
             inv.setItem(i, frameItem);
         }
 
@@ -58,15 +64,58 @@ public class PageUtil {
     }
 
     /**
+     * Update the lore of an item in a GUI
+     * @param inv
+     * @param rawSlot
+     * @param newLore
+     */
+    public static void updateLore(Inventory inv, int rawSlot, List<String> newLore) {
+        ItemStack itemStack = inv.getItem(rawSlot);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setLore(newLore);
+        itemStack.setItemMeta(itemMeta);
+    }
+
+
+    /**
      * Set the receiver's skull in the GUI
      * @param inv
      * @param player
      * @param slot
      */
-    public static void setSkull(Inventory inv, OfflinePlayer player, int slot) {
+    public static void setPlayerSkull(Inventory inv, OfflinePlayer player, int slot) {
         ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
         skullMeta.setOwningPlayer(player);
+        skullMeta.setDisplayName(ChatColor.DARK_GRAY + player.getName());
+        skullMeta.setLore(Arrays.asList(
+                ChatColor.GRAY + "The receiver of the gift!"
+        ));
+        itemStack.setItemMeta(skullMeta);
+
+        inv.setItem(slot, itemStack);
+    }
+
+    /**
+     * Set a custom skull in the GUI
+     * @param inv
+     * @param textureString
+     * @param slot
+     */
+    public static void setCustomSkull(Inventory inv, String textureString, int slot) {
+        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", textureString));
+        Field field;
+        try {
+            field = skullMeta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(skullMeta, profile);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            return;
+        }
         itemStack.setItemMeta(skullMeta);
 
         inv.setItem(slot, itemStack);
