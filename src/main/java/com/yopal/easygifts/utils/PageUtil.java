@@ -76,6 +76,19 @@ public class PageUtil {
         itemStack.setItemMeta(itemMeta);
     }
 
+    /**
+     * Update the display name of an item in a GUI
+     * @param inv
+     * @param rawSlot
+     * @param name
+     */
+    public static void updateDisplayName(Inventory inv, int rawSlot, String name) {
+        ItemStack itemStack = inv.getItem(rawSlot);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemStack.setItemMeta(itemMeta);
+    }
+
 
     /**
      * Set the receiver's skull in the GUI

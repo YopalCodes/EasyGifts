@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class GUIInteractionListener implements Listener {
+public class MainInteractionListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -28,7 +28,7 @@ public class GUIInteractionListener implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1, 2);
         }
 
-        // if not one of the interactive slots, restrict click
+        // if not one of the interactive slots
         switch (e.getRawSlot()) {
             case 29:
                 gui.openTimePage();
