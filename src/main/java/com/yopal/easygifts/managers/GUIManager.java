@@ -3,6 +3,7 @@ package com.yopal.easygifts.managers;
 import com.yopal.easygifts.utils.GUI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +27,18 @@ public class GUIManager {
         }
 
         return null;
+    }
+
+    public static GUI correlateGUI(Inventory inv) {
+        for (GUI gui : GUIList) {
+            if (gui.getCurrentInv() == inv) {
+                return gui;
+            }
+        }
+        return null;
+    }
+
+    public static List<GUI> getGUIList() {
+        return GUIList;
     }
 }

@@ -21,6 +21,7 @@ public class GUI {
     private int days = 0;
     private int seconds = 0;
     private GUITypes guiType = GUITypes.MAIN;
+    private Inventory currentInv;
     private ParticleTypes pType = ParticleTypes.DEFAULT;
     private Player player;
     private OfflinePlayer receiver;
@@ -35,9 +36,11 @@ public class GUI {
     public void openMainPage() {
         guiType = GUITypes.MAIN;
         Inventory inv = Bukkit.createInventory(player, 45, PlayerInteract.returnPrefix() + "Main Page");
+        currentInv = inv;
 
         PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 0, 44);
         PageUtil.setPlayerSkull(inv, receiver, 13);
+        PageUtil.updateStatus(inv, receiver, 13);
 
         // time section
         List<String> monthsDaysSeconds = Arrays.asList(
@@ -46,7 +49,7 @@ public class GUI {
                 ChatColor.GRAY + "Seconds: " + seconds
         );
 
-        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Time", Material.CLOCK, (months != 0 && days != 0 && seconds != 0 ? monthsDaysSeconds : Arrays.asList(ChatColor.GRAY + "Immediately send the gift to the player!")), 29);
+        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Time", Material.CLOCK, (months == 0 && days == 0 && seconds == 0 ? Arrays.asList(ChatColor.GRAY + "Immediately send the gift to the player!") : monthsDaysSeconds), 29);
 
         // particle section
         PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Particle Type", Material.BLAZE_ROD, Arrays.asList(
@@ -64,13 +67,14 @@ public class GUI {
     public void openTimePage() {
         guiType = GUITypes.TIME;
         Inventory inv = Bukkit.createInventory(player, 27, PlayerInteract.returnPrefix() +  "Time Page");
+        currentInv = inv;
 
         // frames
         PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 0, 26);
 
         // barrier
-        PageUtil.setItem(inv, ChatColor.RED + "GO BACK", Material.BARRIER, Arrays.asList(
-                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To go back!"
+        PageUtil.setItem(inv, ChatColor.RED + ChatColor.BOLD.toString() + "GO BACK", Material.BARRIER, Arrays.asList(
+                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "to Go Back!"
         ), 0);
 
         // strings
@@ -116,6 +120,72 @@ public class GUI {
         player.openInventory(inv);
     }
 
+    public void openParticlePage() {
+        guiType = GUITypes.PARTICLE;
+        Inventory inv = Bukkit.createInventory(player, 27, PlayerInteract.returnPrefix() +  "Particle Page");
+        currentInv = inv;
+
+        // frames
+        PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 0, 26);
+
+        // barrier
+        PageUtil.setItem(inv, ChatColor.RED + ChatColor.BOLD.toString() + "GO BACK", Material.BARRIER, Arrays.asList(
+                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "to Go Back!"
+        ), 0);
+
+        // particle items
+        updateParticlePage(inv);
+
+        player.openInventory(inv);
+    }
+
+    public void updateParticlePage(Inventory inv) {
+        String selected = ChatColor.GREEN + ChatColor.BOLD.toString() + "SELECTED";
+        String notSelected = ChatColor.RED + ChatColor.BOLD.toString() + "NOT SELECTED";
+        String click = ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "to Select the Particle Type!";
+        String italicsBold = ChatColor.YELLOW.toString() + ChatColor.BOLD + ChatColor.ITALIC;
+
+        PageUtil.setItem(
+                inv,
+                italicsBold + "DEFAULT " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.DEFAULT ? selected : notSelected),
+                Material.CHEST,
+                Arrays.asList(click),
+                9
+        );
+
+        PageUtil.setItem(
+                inv,
+                italicsBold + "FIRE " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.FIRE ? selected : notSelected),
+                Material.FLINT_AND_STEEL,
+                Arrays.asList(click),
+                11
+        );
+
+        PageUtil.setItem(
+                inv,
+                italicsBold + "ENDER " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.ENDER ? selected : notSelected),
+                Material.ENDER_PEARL,
+                Arrays.asList(click),
+                13
+        );
+
+        PageUtil.setItem(
+                inv,
+                italicsBold + "LOVE " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.LOVE ? selected : notSelected),
+                Material.ARROW,
+                Arrays.asList(click),
+                15
+        );
+
+        PageUtil.setItem(
+                inv,
+                ChatColor.BOLD + ChatColor.YELLOW.toString() + "POOP " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.POOP ? selected : notSelected),
+                Material.BROWN_DYE,
+                Arrays.asList(click),
+                17
+        );
+    }
+
     // getters
     public Player getPlayer() { return player; };
     public OfflinePlayer getReceiver() { return receiver; }
@@ -123,6 +193,7 @@ public class GUI {
     public int getMonths() { return months; }
     public int getDays() { return days; }
     public int getSeconds() { return seconds; }
+    public Inventory getCurrentInv() { return currentInv; }
 
     // setters
     public void setMonths(int time) { months = time; }

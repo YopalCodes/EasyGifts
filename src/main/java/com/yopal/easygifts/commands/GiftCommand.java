@@ -36,6 +36,11 @@ public class GiftCommand implements CommandExecutor {
             return false;
         }
 
+        if (!receiver.hasPlayedBefore()) {
+            PlayerInteract.sendInvalidUsage(player, "Player has to play this server!");
+            return false;
+        }
+
         if (receiver.getUniqueId().equals(player.getUniqueId())) {
             PlayerInteract.sendInvalidUsage(player, "Send a gift to someone besides yourself!");
             return false;

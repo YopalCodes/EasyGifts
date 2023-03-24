@@ -1,5 +1,6 @@
 package com.yopal.easygifts.listeners;
 
+import com.yopal.easygifts.enums.GUITypes;
 import com.yopal.easygifts.managers.GUIManager;
 import com.yopal.easygifts.utils.GUI;
 import org.bukkit.entity.Player;
@@ -12,7 +13,12 @@ public class GUICloseListener implements Listener {
     @EventHandler
     public void onCloseInv(InventoryCloseEvent e) {
 
-        if (e.getInventory() == null || GUIManager.getGUI((Player) e.getPlayer()) == null) {
+        GUI gui = GUIManager.getGUI((Player) e.getPlayer());
+        if (e.getInventory() == null || gui == null) {
+            return;
+        }
+
+        if (GUIManager.correlateGUI(e.getInventory()).getType() != gui.getType()) {
             return;
         }
 

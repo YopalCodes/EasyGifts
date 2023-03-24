@@ -102,11 +102,37 @@ public class PageUtil {
         skullMeta.setOwningPlayer(player);
         skullMeta.setDisplayName(ChatColor.DARK_GRAY + player.getName());
         skullMeta.setLore(Arrays.asList(
-                ChatColor.GRAY + "The receiver of the gift!"
+                ChatColor.GRAY + "The Receiver of the Gift!",
+                ChatColor.GRAY + "Current Status: Unknown"
         ));
         itemStack.setItemMeta(skullMeta);
 
         inv.setItem(slot, itemStack);
+    }
+
+    /**
+     * Update the online or offline status of the player skull in the main GUI
+     * @param inv
+     * @param player
+     * @param slot
+     */
+    public static void updateStatus(Inventory inv, OfflinePlayer player, int slot) {
+        ItemStack itemStack = inv.getItem(slot);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (player.getPlayer() == null) {
+            itemMeta.setLore(Arrays.asList(
+                    ChatColor.GRAY + "The Receiver of the Gift!",
+                    ChatColor.GRAY + "Current Status: OFFLINE"
+            ));
+        } else {
+            itemMeta.setLore(Arrays.asList(
+                    ChatColor.GRAY + "The Receiver of the Gift!",
+                    ChatColor.GRAY + "Current Status: ONLINE"
+            ));
+        }
+
+        itemStack.setItemMeta(itemMeta);
     }
 
     /**
