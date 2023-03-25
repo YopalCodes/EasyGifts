@@ -40,18 +40,18 @@ public class TimeLeftInteractionListener implements Listener {
         // if not one of the interactive slots
         switch (e.getRawSlot()) {
             case 11:
-                gui.setMonths(gui.getMonths() + 1);
-                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "MONTHS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getMonths());
-
-                break;
-            case 13:
                 gui.setDays(gui.getDays() + 1);
                 PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "DAYS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getDays());
 
                 break;
+            case 13:
+                gui.setHours(gui.getHours() + 1);
+                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "HOURS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getHours());
+
+                break;
             case 15:
-                gui.setSeconds(gui.getSeconds() + 1);
-                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "SECONDS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getSeconds());
+                gui.setMinutes(gui.getMinutes() + 1);
+                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "MINUTES " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getMinutes());
 
                 break;
         }

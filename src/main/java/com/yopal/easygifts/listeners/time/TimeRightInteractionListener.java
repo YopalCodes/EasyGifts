@@ -37,24 +37,24 @@ public class TimeRightInteractionListener implements Listener {
 
         switch (e.getRawSlot()) {
             case 11:
-                if (gui.getMonths() == 0) { return; }
-
-                gui.setMonths(gui.getMonths() - 1);
-                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "MONTHS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getMonths());
-
-                break;
-            case 13:
                 if (gui.getDays() == 0) { return; }
 
                 gui.setDays(gui.getDays() - 1);
                 PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "DAYS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getDays());
 
                 break;
-            case 15:
-                if (gui.getSeconds() == 0) { return; }
+            case 13:
+                if (gui.getHours() == 0) { return; }
 
-                gui.setSeconds(gui.getSeconds() - 1);
-                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "SECONDS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getSeconds());
+                gui.setHours(gui.getHours() - 1);
+                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "HOURS " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getHours());
+
+                break;
+            case 15:
+                if (gui.getMinutes() == 0) { return; }
+
+                gui.setMinutes(gui.getMinutes() - 1);
+                PageUtil.updateDisplayName(e.getInventory(), e.getRawSlot(), ChatColor.BOLD + "MINUTES " + ChatColor.GRAY + ChatColor.BOLD + "-> " + ChatColor.GOLD + ChatColor.BOLD + gui.getMinutes());
 
                 break;
         }

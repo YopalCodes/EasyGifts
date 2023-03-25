@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class MainInteractionListener implements Listener {
+public class MainClickListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -37,7 +37,7 @@ public class MainInteractionListener implements Listener {
                 gui.openParticlePage();
                 break;
             case 33:
-                // open chest page
+                gui.openChestPage();
                 break;
         }
 

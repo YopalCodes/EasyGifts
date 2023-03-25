@@ -16,10 +16,10 @@ import java.util.UUID;
 
 public class GiftCommand implements CommandExecutor {
 
-    private EasyGifts gifts;
+    private EasyGifts easyGifts;
 
-    public GiftCommand(EasyGifts gifts) {
-        this.gifts = gifts;
+    public GiftCommand(EasyGifts easyGifts) {
+        this.easyGifts = easyGifts;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -53,12 +53,12 @@ public class GiftCommand implements CommandExecutor {
 
         /*
         GUI MENU:
-        Time: seconds, days, months
+        Time: days, hours, minutes
         Gift Particles: none (default), fire, water, ender, air, firework
         Inventory: have an inventory to deposit the items for the gift
          */
 
-        GUIManager.addGUI(new GUI(player, receiver));
+        GUIManager.addGUI(new GUI(easyGifts, player, receiver));
 
         return false;
     }

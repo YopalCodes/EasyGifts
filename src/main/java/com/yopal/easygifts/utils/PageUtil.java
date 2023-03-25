@@ -2,6 +2,8 @@ package com.yopal.easygifts.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.yopal.easygifts.EasyGifts;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -116,23 +118,28 @@ public class PageUtil {
      * @param player
      * @param slot
      */
-    public static void updateStatus(Inventory inv, OfflinePlayer player, int slot) {
+    public static void updateStatus(EasyGifts easyGifts, Inventory inv, OfflinePlayer player, int slot) {
         ItemStack itemStack = inv.getItem(slot);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        if (player.getPlayer() == null) {
-            itemMeta.setLore(Arrays.asList(
-                    ChatColor.GRAY + "The Receiver of the Gift!",
-                    ChatColor.GRAY + "Current Status: OFFLINE"
-            ));
-        } else {
-            itemMeta.setLore(Arrays.asList(
-                    ChatColor.GRAY + "The Receiver of the Gift!",
-                    ChatColor.GRAY + "Current Status: ONLINE"
-            ));
-        }
+        Bukkit.getScheduler().runTaskLater(easyGifts, ()-> {
+            if (player.isOnline()) {
+                System.out.println("debug1");
+                itemMeta.setLore(Arrays.asList(
+                        ChatColor.GRAY + "The Receiver of the Gift!",
+                        ChatColor.GRAY + "Current Status: ONLINE"
+                ));
+            } else {
+                System.out.println("debug2");
+                itemMeta.setLore(Arrays.asList(
+                        ChatColor.GRAY + "The Receiver of the Gift!",
+                        ChatColor.GRAY + "Current Status: OFFLINE"
+                ));
+            }
 
-        itemStack.setItemMeta(itemMeta);
+            itemStack.setItemMeta(itemMeta);
+        }, 20);
+
     }
 
     /**
