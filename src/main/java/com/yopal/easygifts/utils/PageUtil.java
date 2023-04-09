@@ -3,6 +3,7 @@ package com.yopal.easygifts.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.yopal.easygifts.EasyGifts;
+import com.yopal.easygifts.enums.GUITypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +23,7 @@ public class PageUtil {
 
     /**
      * Create a framing for the GUI - only the top and the bottom row
+     *
      * @param inv
      * @param frameItem
      * @param topLeftSlot
@@ -47,6 +49,7 @@ public class PageUtil {
 
     /**
      * Set a specific ItemStack at a slot in the GUI.
+     *
      * @param inv
      * @param itemName
      * @param material
@@ -67,6 +70,7 @@ public class PageUtil {
 
     /**
      * Update the lore of an item in a GUI
+     *
      * @param inv
      * @param rawSlot
      * @param newLore
@@ -80,6 +84,7 @@ public class PageUtil {
 
     /**
      * Update the display name of an item in a GUI
+     *
      * @param inv
      * @param rawSlot
      * @param name
@@ -94,6 +99,7 @@ public class PageUtil {
 
     /**
      * Set the receiver's skull in the GUI
+     *
      * @param inv
      * @param player
      * @param slot
@@ -114,6 +120,7 @@ public class PageUtil {
 
     /**
      * Update the online or offline status of the player skull in the main GUI
+     *
      * @param inv
      * @param player
      * @param slot
@@ -122,15 +129,13 @@ public class PageUtil {
         ItemStack itemStack = inv.getItem(slot);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        Bukkit.getScheduler().runTaskLater(easyGifts, ()-> {
+        Bukkit.getScheduler().runTaskLater(easyGifts, () -> {
             if (player.isOnline()) {
-                System.out.println("debug1");
                 itemMeta.setLore(Arrays.asList(
                         ChatColor.GRAY + "The Receiver of the Gift!",
                         ChatColor.GRAY + "Current Status: ONLINE"
                 ));
             } else {
-                System.out.println("debug2");
                 itemMeta.setLore(Arrays.asList(
                         ChatColor.GRAY + "The Receiver of the Gift!",
                         ChatColor.GRAY + "Current Status: OFFLINE"
@@ -144,6 +149,7 @@ public class PageUtil {
 
     /**
      * Set a custom skull in the GUI
+     *
      * @param inv
      * @param textureString
      * @param slot
@@ -167,4 +173,31 @@ public class PageUtil {
         inv.setItem(slot, itemStack);
     }
 
+    /**
+     * Return the chest item contents of the GUI back to the player
+     *
+     * @param gui
+     * @param player
+     */
+    public static void returnItems(GUI gui, Inventory inventory, Player player) {
+        if (gui.getChestInv() == null) {
+            return;
+        }
+
+        if (gui.getType().equals(GUITypes.CHEST)) {
+            for (int i = 0; i < 45; i++) {
+                ItemStack itemStack = inventory.getItem(i);
+                if (itemStack != null) {
+                    player.getInventory().addItem(itemStack);
+                }
+            }
+        } else {
+            for (int i = 0; i < 45; i++) {
+                ItemStack itemStack = gui.getChestInv().getItem(i);
+                if (itemStack != null) {
+                    player.getInventory().addItem(itemStack);
+                }
+            }
+        }
+    }
 }

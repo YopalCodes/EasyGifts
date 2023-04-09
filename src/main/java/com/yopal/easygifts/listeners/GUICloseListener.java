@@ -3,6 +3,7 @@ package com.yopal.easygifts.listeners;
 import com.yopal.easygifts.enums.GUITypes;
 import com.yopal.easygifts.managers.GUIManager;
 import com.yopal.easygifts.utils.GUI;
+import com.yopal.easygifts.utils.PageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,26 +30,6 @@ public class GUICloseListener implements Listener {
         }
 
         GUIManager.removeGUI(gui);
-
-        // adding contents to player's inv if they had items in chest page
-        if (gui.getChestInv() == null) {
-            return;
-        }
-
-        if (gui.getType().equals(GUITypes.CHEST)) {
-            for (int i = 0; i < 45; i++) {
-                ItemStack itemStack = e.getInventory().getItem(i);
-                if (itemStack != null) {
-                    player.getInventory().addItem(itemStack);
-                }
-            }
-        } else {
-            for (int i = 0; i < 45; i++) {
-                ItemStack itemStack = gui.getChestInv().getItem(i);
-                if (itemStack != null) {
-                    player.getInventory().addItem(itemStack);
-                }
-            }
-        }
+        PageUtil.returnItems(gui, e.getInventory(), player);
     }
 }

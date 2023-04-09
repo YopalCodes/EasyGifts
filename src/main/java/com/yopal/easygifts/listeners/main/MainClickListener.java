@@ -3,6 +3,7 @@ package com.yopal.easygifts.listeners.main;
 import com.yopal.easygifts.enums.GUITypes;
 import com.yopal.easygifts.managers.GUIManager;
 import com.yopal.easygifts.utils.GUI;
+import com.yopal.easygifts.utils.PageUtil;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,20 +25,20 @@ public class MainClickListener implements Listener {
             return;
         }
 
-        if (e.getRawSlot() == 29 || e.getRawSlot() == 31 || e.getRawSlot() == 33) {
+        if (e.getRawSlot() == 20 || e.getRawSlot() == 22 || e.getRawSlot() == 24 || e.getRawSlot() == 29 || e.getRawSlot() == 31) {
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1, 1);
         }
 
         // if not one of the interactive slots
         switch (e.getRawSlot()) {
-            case 29:
+            case 20:
+                gui.openChestPage();
+                break;
+            case 22:
                 gui.openTimePage();
                 break;
-            case 31:
+            case 24:
                 gui.openParticlePage();
-                break;
-            case 33:
-                gui.openChestPage();
                 break;
         }
 

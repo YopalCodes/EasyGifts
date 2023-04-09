@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import sun.jvm.hotspot.debugger.Page;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,8 @@ public class GUI {
     private GUITypes guiType = GUITypes.MAIN;
     private Inventory currentInv;
     private ParticleTypes pType = ParticleTypes.DEFAULT;
+    private String chestTitle;
+    private String personalizedMessage;
     private Inventory chestInv;
     private Player player;
     private OfflinePlayer receiver;
@@ -33,6 +36,9 @@ public class GUI {
         this.easyGifts = easyGifts;
         this.player = player;
         this.receiver = receiver;
+
+        chestTitle = "Gift - " + player.getName();
+
         openMainPage();
     }
 
@@ -45,6 +51,11 @@ public class GUI {
         PageUtil.setPlayerSkull(inv, receiver, 13);
         PageUtil.updateStatus(easyGifts, inv, receiver, 13);
 
+        // chest section
+        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Chest", Material.CHEST, Arrays.asList(
+                ChatColor.GRAY + "Store the items for the gift!"
+        ), 20);
+        
         // time section
         List<String> dayshoursminutes = Arrays.asList(
                 TimeConvert.getFutureDate(days, hours, minutes),
@@ -53,17 +64,30 @@ public class GUI {
                 ChatColor.GRAY + "Minutes: " + minutes
         );
 
-        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Time", Material.CLOCK, (days == 0 && hours == 0 && minutes == 0 ? Arrays.asList(ChatColor.GRAY + "Immediately send the gift to the player!") : dayshoursminutes), 29);
+        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Time", Material.CLOCK, (days == 0 && hours == 0 && minutes == 0 ? Arrays.asList(ChatColor.GRAY + "Immediately send the gift to the player!") : dayshoursminutes), 22);
 
         // particle section
         PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Particle Type", Material.BLAZE_ROD, Arrays.asList(
                 ChatColor.GRAY + "Particle Type: " + pType.toString()
+        ), 24);
+
+        // chest title section
+        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Chest Title", Material.OAK_SIGN, Arrays.asList(
+                ChatColor.GRAY + "Title: " + chestTitle
+        ), 29);
+
+        // personalized message section
+        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Personalized Message", Material.PAPER, Arrays.asList(
+                ChatColor.GRAY + "Message: " + (personalizedMessage == null ? "NONE" : personalizedMessage)
         ), 31);
 
-        // chest section
-        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Chest", Material.CHEST, Arrays.asList(
-                ChatColor.GRAY + "Store the items for the gift!"
-        ), 33);
+        // confirm
+        PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTc5YTVjOTVlZTE3YWJmZWY0NWM4ZGMyMjQxODk5NjQ5NDRkNTYwZjE5YTQ0ZjE5ZjhhNDZhZWYzZmVlNDc1NiJ9fX0=", 33);
+        PageUtil.updateDisplayName(inv, 33, ChatColor.GREEN + ChatColor.BOLD.toString() + "CONFIRM");
+        PageUtil.updateLore(inv, 33, Arrays.asList(
+                (chestInv == null ? ChatColor.GRAY + "Please make put items into the gift first!" : ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Send Out the Gift!")
+        ));
+
 
         player.openInventory(inv);
     }
@@ -222,6 +246,10 @@ public class GUI {
     public int getMinutes() { return minutes; }
     public Inventory getCurrentInv() { return currentInv; }
     public Inventory getChestInv() { return chestInv; }
+    public String getChestTitle() { return chestTitle; }
+    public String getPersonalizedMessage() { return personalizedMessage; }
+    public ParticleTypes getpType() { return pType; }
+    public String getFutureDate() { return TimeConvert.getFutureDate(days, hours, minutes); }
 
     // setters
     public void setDays(int time) { days = time; }

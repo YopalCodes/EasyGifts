@@ -51,6 +51,11 @@ public class GiftCommand implements CommandExecutor {
             return false;
         }
 
+        if (args.length == 0) {
+            PlayerInteract.sendInvalidUsage(player, "Please include a player's name!");
+            return false;
+        }
+
         /*
         GUI MENU:
         Time: days, hours, minutes
