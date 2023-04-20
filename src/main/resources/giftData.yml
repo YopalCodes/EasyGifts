@@ -1,0 +1,9 @@
+# Structure of Data:
+# UUID of the receiver of the gift:
+#   senderUUID: UUID of the player who sent the gift
+#   chestTitle: the title of the gift
+#   futureDate: tells when the receiver may open the gift (UTC timezone)
+#   particleType: the animation of when the gift is opened
+#   giftInventory:
+#     slotNumber:
+#       itemStack

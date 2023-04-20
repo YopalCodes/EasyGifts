@@ -1,8 +1,7 @@
 package com.yopal.easygifts.utils;
 
-import com.yopal.easygifts.enums.UtilTypes;
+import com.yopal.easygifts.utils.enums.MessageTypes;
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +20,7 @@ public class PlayerInteract {
      * @param secondMesssage
      * @param type
      */
-    public static void sendToAll(String message, String secondMesssage, UtilTypes type) {
+    public static void sendToAll(String message, String secondMesssage, MessageTypes type) {
         switch (type) {
             case TITLE:
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -43,7 +42,7 @@ public class PlayerInteract {
      * @param message
      * @param type
      */
-    public static void sendToAll(String message, UtilTypes type) {
+    public static void sendToAll(String message, MessageTypes type) {
 
         switch (type) {
             case MESSAGE:

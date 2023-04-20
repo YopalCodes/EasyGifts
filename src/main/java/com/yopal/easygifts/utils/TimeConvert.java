@@ -2,6 +2,7 @@ package com.yopal.easygifts.utils;
 
 import org.bukkit.ChatColor;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,5 +22,10 @@ public class TimeConvert {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
         return ChatColor.GRAY + simpleDateFormat.format(c.getTime()) + " (UTC)";
+    }
+
+    public static Date getDateFromFormat(String string) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+        return simpleDateFormat.parse(string.replace(" (UTC)", ""));
     }
 }

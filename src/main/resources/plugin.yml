@@ -4,5 +4,3 @@ main: com.yopal.easygifts.EasyGifts
 api-version: 1.16
 commands:
   ezg:
-  accept:
-  deny:

@@ -1,18 +1,16 @@
 package com.yopal.easygifts.commands;
 
-import com.sun.net.httpserver.Request;
 import com.yopal.easygifts.EasyGifts;
-import com.yopal.easygifts.enums.GiftTypes;
-import com.yopal.easygifts.managers.GUIManager;
-import com.yopal.easygifts.utils.GUI;
+import com.yopal.easygifts.GUI.giftOpen.instances.GUIOpen;
+import com.yopal.easygifts.GUI.giftSend.managers.GUISendManager;
+import com.yopal.easygifts.GUI.giftOpen.managers.GUIOpenManager;
+import com.yopal.easygifts.GUI.giftSend.instances.GUISend;
 import com.yopal.easygifts.utils.PlayerInteract;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class GiftCommand implements CommandExecutor {
 
@@ -29,41 +27,52 @@ public class GiftCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        OfflinePlayer receiver = Bukkit.getOfflinePlayer(args[0]);
-
-        if (receiver == null) {
-            PlayerInteract.sendInvalidUsage(player, "That's not a player");
+        if (args.length < 1) {
+            PlayerInteract.sendInvalidUsage(player, "Not a command!");
             return false;
         }
 
-        if (!receiver.hasPlayedBefore()) {
-            PlayerInteract.sendInvalidUsage(player, "Player has to play this server!");
-            return false;
+        switch (args[0].toLowerCase()) {
+            case "open":
+                GUIOpenManager.addGUI(new GUIOpen(player));
+                break;
+
+            case "send":
+
+                if (args.length != 2) {
+                    PlayerInteract.sendInvalidUsage(player, "Please specify a player!");
+                    return false;
+                }
+
+                OfflinePlayer receiver = Bukkit.getOfflinePlayer(args[1]);
+
+                if (receiver == null) {
+                    PlayerInteract.sendInvalidUsage(player, "That's not a player");
+                    return false;
+                }
+
+                if (!receiver.hasPlayedBefore()) {
+                    PlayerInteract.sendInvalidUsage(player, "Player has to play this server!");
+                    return false;
+                }
+
+                if (receiver.getUniqueId().equals(player.getUniqueId())) {
+                    PlayerInteract.sendInvalidUsage(player, "You cannot put your own name!");
+                    return false;
+                }
+
+                GUISendManager.addGUI(new GUISend(easyGifts, player, receiver));
+                break;
+
+            default:
+                PlayerInteract.sendInvalidUsage(player, "Not a command!");
+                break;
         }
 
-        if (receiver.getUniqueId().equals(player.getUniqueId())) {
-            PlayerInteract.sendInvalidUsage(player, "Send a gift to someone besides yourself!");
-            return false;
-        }
 
-        if (args.length > 1) {
-            PlayerInteract.sendInvalidUsage(player, "Too many arguments, please only include a player's name!");
-            return false;
-        }
 
-        if (args.length == 0) {
-            PlayerInteract.sendInvalidUsage(player, "Please include a player's name!");
-            return false;
-        }
 
-        /*
-        GUI MENU:
-        Time: days, hours, minutes
-        Gift Particles: none (default), fire, water, ender, air, firework
-        Inventory: have an inventory to deposit the items for the gift
-         */
 
-        GUIManager.addGUI(new GUI(easyGifts, player, receiver));
 
         return false;
     }

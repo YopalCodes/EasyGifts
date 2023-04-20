@@ -3,7 +3,8 @@ package com.yopal.easygifts.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.yopal.easygifts.EasyGifts;
-import com.yopal.easygifts.enums.GUITypes;
+import com.yopal.easygifts.GUI.enums.GUITypes;
+import com.yopal.easygifts.GUI.giftSend.instances.GUISend;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -179,7 +180,7 @@ public class PageUtil {
      * @param gui
      * @param player
      */
-    public static void returnItems(GUI gui, Inventory inventory, Player player) {
+    public static void returnItems(GUISend gui, Inventory inventory, Player player) {
         if (gui.getChestInv() == null) {
             return;
         }
