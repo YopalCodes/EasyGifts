@@ -26,17 +26,18 @@ public class GUIOpen {
 
     public GUIOpen(Player player) {
         this.player = player;
-        guiType = GUITypes.CHANGEPAGE;
 
-        openPage();
+        openMainPage();
 
     }
 
-    public void openPage() {
+    public void openMainPage() {
 
         Inventory inv = Bukkit.createInventory(player, 45, PlayerInteract.returnPrefix() + "Main Page - Page " + (page + 1));
         PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 0, 44);
         currentInv = inv;
+        guiType = GUITypes.CHANGEPAGE;
+
 
         // left
         if (page != 0) {
@@ -84,6 +85,34 @@ public class GUIOpen {
         player.openInventory(inv);
     }
 
+    public void openGiftPage(PlayerData playerData, int giftID) {
+        Inventory inv = playerData.getGiftInventory(player.getUniqueId(), giftID);
+        currentInv = inv;
+        guiType = GUITypes.GIFTPAGE;
+
+        // back
+        PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTQ4ZDdkMWUwM2UxYWYxNDViMDEyNWFiODQxMjg1NjcyYjQyMTI2NWRhMmFiOTE1MDE1ZjkwNTg0MzhiYTJkOCJ9fX0=", 45);
+        PageUtil.updateDisplayName(inv, 45, ChatColor.RED + ChatColor.BOLD.toString() + "GO BACK");
+        PageUtil.updateLore(inv, 45, Arrays.asList(
+                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Go Back to your List of Gifts!"
+        ));
+
+        // collect
+        PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmZlYzNkMjVhZTBkMTQ3YzM0MmM0NTM3MGUwZTQzMzAwYTRlNDhhNWI0M2Y5YmI4NThiYWJmZjc1NjE0NGRhYyJ9fX0=", 53);
+        PageUtil.updateDisplayName(inv, 53, ChatColor.RED + ChatColor.BOLD.toString() + "COLLECT");
+        PageUtil.updateLore(inv, 53, Arrays.asList(
+                (checkHasSpace() ? ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Collect your Items!" : ChatColor.RED + "You don't have enough space to collect these items!")
+        ));
+
+        String personalizedMsg = playerData.getPersonalizedMessage(player.getUniqueId(), giftID);
+        if (personalizedMsg != null) {
+            player.sendMessage(personalizedMsg);
+        }
+
+        player.openInventory(inv);
+
+    }
+
     // setters
 
     public void addPage(Material material) {
@@ -100,6 +129,14 @@ public class GUIOpen {
         }
 
         page --;
+    }
+
+    public boolean checkHasSpace() {
+        if (player.getInventory().addItem(currentInv.getContents()).isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // getters

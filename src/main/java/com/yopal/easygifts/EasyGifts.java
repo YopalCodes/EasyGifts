@@ -1,5 +1,6 @@
 package com.yopal.easygifts;
 
+import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenHeadInteractionListener;
 import com.yopal.easygifts.YML.listeners.PlayerConnectListener;
 import com.yopal.easygifts.commands.GiftCommand;
 import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenPageListener;
@@ -13,7 +14,6 @@ import com.yopal.easygifts.GUI.giftSend.listeners.chest.ChestRestrictionListener
 import com.yopal.easygifts.GUI.giftSend.listeners.main.MainClickListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.GUISendRestrictionListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.main.MainLeftInteractionListener;
-import com.yopal.easygifts.GUI.giftSend.listeners.particle.ParticleClickInteractionListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.player.PlayerPickupListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.time.TimeClickInteractionListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.time.TimeDropInteractionListener;
@@ -59,14 +59,13 @@ public final class EasyGifts extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TimeRightInteractionListener(), this);
         Bukkit.getPluginManager().registerEvents(new TimeClickInteractionListener(), this);
 
-        Bukkit.getPluginManager().registerEvents(new ParticleClickInteractionListener(), this);
-
         Bukkit.getPluginManager().registerEvents(new ChestClickInteractionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChestRestrictionListener(), this);
 
         Bukkit.getPluginManager().registerEvents(new GUIOpenRestrictionListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIOpenCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIOpenPageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GUIOpenHeadInteractionListener(), this);
 
     }
 

@@ -40,6 +40,7 @@ public class GiftDataManager {
 
     }
 
+
     public static PlayerData getPlayerData(UUID playerUUID) {
         for (PlayerData playerData : playerDataList) {
             if (playerData.getPlayerUUID().equals(playerUUID)) {
@@ -49,6 +50,7 @@ public class GiftDataManager {
 
         return null;
     }
+
 
 
 

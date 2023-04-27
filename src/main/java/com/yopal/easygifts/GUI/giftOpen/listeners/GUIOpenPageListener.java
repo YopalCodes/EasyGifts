@@ -33,14 +33,14 @@ public class GUIOpenPageListener implements Listener {
         switch (e.getRawSlot()) {
             case 0:
                 gui.subtractPage(e.getCurrentItem().getType());
-                gui.openPage();
+                gui.openMainPage();
                 break;
             case 4:
-                gui.openPage();
+                gui.openMainPage();
                 break;
             case 8:
                 gui.addPage(e.getCurrentItem().getType());
-                gui.openPage();
+                gui.openMainPage();
                 break;
         }
 

@@ -20,7 +20,7 @@ public class GUIOpenRestrictionListener implements Listener {
             return;
         }
 
-        if (!gui.getType().equals(GUITypes.CHANGEPAGE)) {
+        if (!gui.getType().equals(GUITypes.CHANGEPAGE) && !gui.getType().equals(GUITypes.GIFTPAGE)) {
             return;
         }
 

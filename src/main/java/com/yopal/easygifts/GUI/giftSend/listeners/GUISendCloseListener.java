@@ -29,11 +29,8 @@ public class GUISendCloseListener implements Listener {
         }
 
         if (gui.getType().equals(GUITypes.CONVERSATION)) {
-            System.out.println("debug1");
             return;
         }
-
-        System.out.println("debug2");
 
         GUISendManager.removeGUI(gui);
         PageUtil.returnItems(gui, e.getInventory(), player);

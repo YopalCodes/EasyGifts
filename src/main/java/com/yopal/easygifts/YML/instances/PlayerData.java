@@ -1,8 +1,8 @@
 package com.yopal.easygifts.YML.instances;
 
 import com.yopal.easygifts.EasyGifts;
-import com.yopal.easygifts.GUI.enums.ParticleTypes;
 import com.yopal.easygifts.GUI.giftSend.instances.GUISend;
+import com.yopal.easygifts.utils.PageUtil;
 import com.yopal.easygifts.utils.TimeConvert;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,7 +36,6 @@ public class PlayerData {
         playerFile.set(startPath + ".chestTitle", gui.getChestTitle().toString());
         playerFile.set(startPath + ".personalizedMessage", gui.getPersonalizedMessage());
         playerFile.set(startPath + ".futureDate", gui.getFutureDate().replace("§7", "").toString());
-        playerFile.set(startPath + ".particleType", gui.getpType().toString());
 
         for (int i = 0; i < 45; i++) {
             ItemStack itemStack = gui.getChestInv().getItem(i);
@@ -85,8 +84,7 @@ public class PlayerData {
                 ChatColor.DARK_GRAY + "====================================",
                 ChatColor.GRAY + "GIFT ID: " + i,
                 ChatColor.GRAY + "OPEN DURING: " + playerFile.get("gifts." + i + ".futureDate").toString(),
-                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Open With the Animation!",
-                    ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Right-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Open Without the Animation!",
+                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Open the Gift",
                 ChatColor.DARK_GRAY + "===================================="
             ));
 
@@ -96,6 +94,10 @@ public class PlayerData {
         }
 
         return playerGifts;
+    }
+
+    public void removeData(int giftID) {
+        playerFile.set("gifts." + giftID, null);
     }
 
     private int getNewMaxID() {
@@ -125,18 +127,18 @@ public class PlayerData {
         return UUID.fromString(file.getName().replace(".yml", ""));
     }
 
-    public UUID getSenderUUID() {
-        String string = playerFile.getString("gifts." + getNewMaxID() + ".senderUUID");
+    public UUID getSenderUUID(int giftID) {
+        String string = playerFile.getString("gifts." + giftID + ".senderUUID");
         return UUID.fromString(string);
     }
 
-    public String getChestTitle() {
-        return playerFile.getString("gifts." + getNewMaxID() + ".chestTitle");
+    public String getChestTitle(int giftID) {
+        return playerFile.getString("gifts." + giftID + ".chestTitle");
     }
 
-    public String getPersonalizedMessage(UUID playerUUID) {
-        if (playerFile.get(playerUUID + ".personalizedMessage") != null) {
-            return playerFile.get("gifts." + getNewMaxID() + ".personalizedMessage").toString();
+    public String getPersonalizedMessage(UUID playerUUID, int giftID) {
+        if (playerFile.get("gifts." + giftID + ".personalizedMessage") != null) {
+            return playerFile.get("gifts." + giftID + ".personalizedMessage").toString();
         } else {
             return null;
         }
@@ -144,10 +146,6 @@ public class PlayerData {
 
     public Date getFutureDate(UUID playerUUID) throws ParseException {
         return TimeConvert.getDateFromFormat(playerFile.getString("gifts." + getNewMaxID() + ".futureDate"));
-    }
-
-    public ParticleTypes getParticleType(UUID playerUUID) {
-        return ParticleTypes.valueOf(playerFile.getString("gifts." + getNewMaxID() + ".particleType"));
     }
 
     public Inventory getInventory(UUID playerUUID) {
@@ -161,6 +159,21 @@ public class PlayerData {
             }
 
             inv.addItem(itemStack);
+        }
+
+        return inv;
+    }
+
+    public Inventory getGiftInventory(UUID playerUUID, int giftID) {
+        Inventory inv = Bukkit.createInventory(Bukkit.getPlayer(playerUUID), 54, getChestTitle(giftID));
+        PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 45, 53);
+
+        for (int i = 0; i < 45; i++) {
+            ItemStack itemStack = playerFile.getItemStack("gifts." + giftID + ".giftInventory." + i);
+            if (itemStack == null) {
+                continue;
+            }
+            inv.setItem(i, itemStack);
         }
 
         return inv;

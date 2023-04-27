@@ -2,7 +2,6 @@ package com.yopal.easygifts.GUI.giftSend.instances;
 
 import com.yopal.easygifts.EasyGifts;
 import com.yopal.easygifts.GUI.enums.GUITypes;
-import com.yopal.easygifts.GUI.enums.ParticleTypes;
 import com.yopal.easygifts.utils.PageUtil;
 import com.yopal.easygifts.utils.PlayerInteract;
 import com.yopal.easygifts.utils.TimeConvert;
@@ -24,7 +23,6 @@ public class GUISend {
     private int minutes = 0;
     private GUITypes guiType = GUITypes.MAIN;
     private Inventory currentInv;
-    private ParticleTypes pType = ParticleTypes.NONE;
     private String chestTitle;
     private String personalizedMessage;
     private Inventory chestInv;
@@ -66,25 +64,20 @@ public class GUISend {
 
         PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Time", Material.CLOCK, (days == 0 && hours == 0 && minutes == 0 ? Arrays.asList(ChatColor.GRAY + "Immediately send the gift to the player!") : dayshoursminutes), 22);
 
-        // particle section
-        PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Particle Type", Material.BLAZE_ROD, Arrays.asList(
-                ChatColor.GRAY + "Particle Type: " + pType.toString()
-        ), 24);
-
         // chest title section
         PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Chest Title", Material.OAK_SIGN, Arrays.asList(
                 ChatColor.GRAY + "Title: " + chestTitle
-        ), 29);
+        ), 24);
 
         // personalized message section
         PageUtil.setItem(inv, ChatColor.DARK_GRAY + "Personalized Message", Material.PAPER, Arrays.asList(
                 ChatColor.GRAY + "Message: " + (personalizedMessage == null ? "NONE" : personalizedMessage)
-        ), 31);
+        ), 30);
 
         // confirm
-        PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTc5YTVjOTVlZTE3YWJmZWY0NWM4ZGMyMjQxODk5NjQ5NDRkNTYwZjE5YTQ0ZjE5ZjhhNDZhZWYzZmVlNDc1NiJ9fX0=", 33);
-        PageUtil.updateDisplayName(inv, 33, ChatColor.GREEN + ChatColor.BOLD.toString() + "CONFIRM");
-        PageUtil.updateLore(inv, 33, Arrays.asList(
+        PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTc5YTVjOTVlZTE3YWJmZWY0NWM4ZGMyMjQxODk5NjQ5NDRkNTYwZjE5YTQ0ZjE5ZjhhNDZhZWYzZmVlNDc1NiJ9fX0=", 32);
+        PageUtil.updateDisplayName(inv, 32, ChatColor.GREEN + ChatColor.BOLD.toString() + "CONFIRM");
+        PageUtil.updateLore(inv, 32, Arrays.asList(
                 (checkChestInvEmpty() ? ChatColor.GRAY + "Please make put items into the gift first!" : ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Send Out the Gift!")
         ));
 
@@ -148,72 +141,6 @@ public class GUISend {
         player.openInventory(inv);
     }
 
-    public void openParticlePage() {
-        guiType = GUITypes.PARTICLE;
-        Inventory inv = Bukkit.createInventory(player, 27, PlayerInteract.returnPrefix() +  "Particle Page");
-        currentInv = inv;
-
-        // frames
-        PageUtil.createFrames(inv, new ItemStack(Material.GRAY_STAINED_GLASS_PANE), 0, 26);
-
-        // barrier
-        PageUtil.setItem(inv, ChatColor.RED + ChatColor.BOLD.toString() + "GO BACK", Material.BARRIER, Arrays.asList(
-                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Go Back!"
-        ), 0);
-
-        // particle items
-        updateParticlePage(inv);
-
-        player.openInventory(inv);
-    }
-
-    public void updateParticlePage(Inventory inv) {
-        String selected = ChatColor.GREEN + ChatColor.BOLD.toString() + "SELECTED";
-        String notSelected = ChatColor.RED + ChatColor.BOLD.toString() + "NOT SELECTED";
-        String click = ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "to Select the Particle Type!";
-        String italicsBold = ChatColor.YELLOW.toString() + ChatColor.BOLD + ChatColor.ITALIC;
-
-        PageUtil.setItem(
-                inv,
-                italicsBold + "NONE " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.NONE ? selected : notSelected),
-                Material.CHEST,
-                Arrays.asList(click),
-                9
-        );
-
-        PageUtil.setItem(
-                inv,
-                italicsBold + "FIRE " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.FIRE ? selected : notSelected),
-                Material.FLINT_AND_STEEL,
-                Arrays.asList(click),
-                11
-        );
-
-        PageUtil.setItem(
-                inv,
-                italicsBold + "ENDER " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.ENDER ? selected : notSelected),
-                Material.ENDER_PEARL,
-                Arrays.asList(click),
-                13
-        );
-
-        PageUtil.setItem(
-                inv,
-                italicsBold + "LOVE " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.LOVE ? selected : notSelected),
-                Material.ARROW,
-                Arrays.asList(click),
-                15
-        );
-
-        PageUtil.setItem(
-                inv,
-                italicsBold + "POOP " + ChatColor.GRAY + ChatColor.BOLD + "-> " + (pType == ParticleTypes.POOP ? selected : notSelected),
-                Material.BROWN_DYE,
-                Arrays.asList(click),
-                17
-        );
-    }
-
     public void openChestPage() {
         guiType = GUITypes.CHEST;
         Inventory inv = Bukkit.createInventory(player, 54, PlayerInteract.returnPrefix() +  "Chest Page");
@@ -262,14 +189,12 @@ public class GUISend {
     public Inventory getChestInv() { return chestInv; }
     public String getChestTitle() { return chestTitle; }
     public String getPersonalizedMessage() { return personalizedMessage; }
-    public ParticleTypes getpType() { return pType; }
     public String getFutureDate() { return TimeConvert.getFutureDate(days, hours, minutes); }
 
     // setters
     public void setDays(int time) { days = time; }
     public void setHours(int time) { hours = time; }
     public void setMinutes(int time) { minutes = time; }
-    public void setpType(ParticleTypes type) { pType = type; }
     public void setChestInv(Inventory inv) { chestInv = inv; }
     public void setChestTitle(String string) { chestTitle = ChatColor.translateAlternateColorCodes('&', string); }
     public void setPersonalizedMessage(String string) { personalizedMessage = ChatColor.translateAlternateColorCodes('&', string); }

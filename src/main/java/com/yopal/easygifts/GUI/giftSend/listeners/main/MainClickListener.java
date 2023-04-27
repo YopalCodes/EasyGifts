@@ -32,7 +32,7 @@ public class MainClickListener implements Listener {
             return;
         }
 
-        if (e.getRawSlot() == 20 || e.getRawSlot() == 22 || e.getRawSlot() == 24 || e.getRawSlot() == 29 || e.getRawSlot() == 31) {
+        if (e.getRawSlot() == 20 || e.getRawSlot() == 22 || e.getRawSlot() == 24 || e.getRawSlot() == 30) {
             player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1, 1);
         }
 
@@ -45,14 +45,11 @@ public class MainClickListener implements Listener {
                 gui.openTimePage();
                 break;
             case 24:
-                gui.openParticlePage();
-                break;
-            case 29:
                 gui.setType(GUITypes.CONVERSATION);
                 player.closeInventory();
                 ConversationManager.converseTitle(easyGifts, player);
                 break;
-            case 31:
+            case 30:
                 gui.setType(GUITypes.CONVERSATION);
                 player.closeInventory();
                 ConversationManager.converseMessage(easyGifts, player);

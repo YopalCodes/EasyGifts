@@ -6,5 +6,6 @@ public enum GUITypes {
     PARTICLE,
     CHEST,
     CHANGEPAGE,
+    GIFTPAGE,
     CONVERSATION
 }
