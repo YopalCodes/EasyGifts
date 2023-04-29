@@ -5,6 +5,9 @@ import com.yopal.easygifts.GUI.giftOpen.instances.GUIOpen;
 import com.yopal.easygifts.GUI.giftSend.managers.GUISendManager;
 import com.yopal.easygifts.GUI.giftOpen.managers.GUIOpenManager;
 import com.yopal.easygifts.GUI.giftSend.instances.GUISend;
+import com.yopal.easygifts.YML.instances.PlayerData;
+import com.yopal.easygifts.YML.managers.GiftDataManager;
+import com.yopal.easygifts.utils.EZGHelp;
 import com.yopal.easygifts.utils.PlayerInteract;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -34,10 +37,19 @@ public class GiftCommand implements CommandExecutor {
 
         switch (args[0].toLowerCase()) {
             case "open":
+                if (!player.hasPermission("ezg.user.open")) {
+                    PlayerInteract.sendLackPermission(player, "ezg.user.open");
+                    break;
+                }
+
                 GUIOpenManager.addGUI(new GUIOpen(player));
                 break;
 
             case "send":
+                if (!player.hasPermission("ezg.user.send")) {
+                    PlayerInteract.sendLackPermission(player, "ezg.user.send");
+                    break;
+                }
 
                 if (args.length != 2) {
                     PlayerInteract.sendInvalidUsage(player, "Please specify a player!");
@@ -61,7 +73,22 @@ public class GiftCommand implements CommandExecutor {
                     return false;
                 }
 
+                if (!GiftDataManager.getPlayerData(receiver.getUniqueId()).getToggleSend()) {
+                    PlayerInteract.sendMessage(player, ChatColor.RED + receiver.getName() + " is not receiving gifts at this moment!");
+                    return false;
+                }
+
                 GUISendManager.addGUI(new GUISend(easyGifts, player, receiver));
+                break;
+
+            case "toggle":
+                PlayerData playerData = GiftDataManager.getPlayerData(player.getUniqueId());
+                playerData.toggleSend(easyGifts);
+                PlayerInteract.sendMessage(player, (playerData.getToggleSend() ? ChatColor.GREEN + "Receiving gifts enabled!" : ChatColor.GREEN + "Receiving gifts disabled!"));
+                break;
+
+            case "help":
+                EZGHelp.sendHelp(player);
                 break;
 
             default:

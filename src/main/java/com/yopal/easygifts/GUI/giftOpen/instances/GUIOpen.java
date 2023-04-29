@@ -8,11 +8,17 @@ import com.yopal.easygifts.utils.PlayerInteract;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class GUIOpen {
@@ -24,7 +30,9 @@ public class GUIOpen {
     private boolean canGoToNextPage;
     private Inventory currentInv;
 
-    public GUIOpen(Player player) {
+    private int giftID;
+
+    public GUIOpen(Player player){
         this.player = player;
 
         openMainPage();
@@ -87,6 +95,7 @@ public class GUIOpen {
 
     public void openGiftPage(PlayerData playerData, int giftID) {
         Inventory inv = playerData.getGiftInventory(player.getUniqueId(), giftID);
+        this.giftID = giftID;
         currentInv = inv;
         guiType = GUITypes.GIFTPAGE;
 
@@ -99,15 +108,10 @@ public class GUIOpen {
 
         // collect
         PageUtil.setCustomSkull(inv, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmZlYzNkMjVhZTBkMTQ3YzM0MmM0NTM3MGUwZTQzMzAwYTRlNDhhNWI0M2Y5YmI4NThiYWJmZjc1NjE0NGRhYyJ9fX0=", 53);
-        PageUtil.updateDisplayName(inv, 53, ChatColor.RED + ChatColor.BOLD.toString() + "COLLECT");
+        PageUtil.updateDisplayName(inv, 53, ChatColor.GREEN + ChatColor.BOLD.toString() + "COLLECT");
         PageUtil.updateLore(inv, 53, Arrays.asList(
                 (checkHasSpace() ? ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Collect your Items!" : ChatColor.RED + "You don't have enough space to collect these items!")
         ));
-
-        String personalizedMsg = playerData.getPersonalizedMessage(player.getUniqueId(), giftID);
-        if (personalizedMsg != null) {
-            player.sendMessage(personalizedMsg);
-        }
 
         player.openInventory(inv);
 
@@ -132,16 +136,31 @@ public class GUIOpen {
     }
 
     public boolean checkHasSpace() {
-        if (player.getInventory().addItem(currentInv.getContents()).isEmpty()) {
-            return true;
-        } else {
-            return false;
+        Inventory checkInv = Bukkit.createInventory(player, 36);
+        checkInv.setContents(player.getInventory().getStorageContents());
+
+        for (int i = 0; i < 45; i++) {
+            ItemStack itemStack = currentInv.getItem(i);
+            if (itemStack == null) {
+                continue;
+            }
+
+            HashMap<Integer, ItemStack> itemStackHashMap = checkInv.addItem(itemStack);
+            if (!itemStackHashMap.isEmpty()) {
+                return false;
+            }
         }
+
+        return true;
+
     }
 
     // getters
     public Player getPlayer() { return player; }
     public GUITypes getType() { return guiType; }
+
+    @Nullable
+    public int getGiftID() { return giftID; }
 
 
     public Inventory getCurrentInv() { return currentInv;

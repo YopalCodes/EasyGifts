@@ -20,12 +20,12 @@ public class GiftDataManager {
         }
 
         for (File file : dataFolder.listFiles()) {
-            playerDataList.add(new PlayerData(file));
+            playerDataList.add(new PlayerData(file, easyGifts));
         }
 
     }
 
-    public static void addFile(UUID playerUUID) {
+    public static void addFile(UUID playerUUID, EasyGifts easyGifts) {
         File playerFile = new File(dataFolder, playerUUID + ".yml");
 
         if (!playerFile.exists()) {
@@ -36,7 +36,7 @@ public class GiftDataManager {
             }
         }
 
-        playerDataList.add(new PlayerData(playerFile));
+        playerDataList.add(new PlayerData(playerFile, easyGifts));
 
     }
 

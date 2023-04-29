@@ -17,6 +17,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -25,9 +27,22 @@ public class PlayerData {
     private YamlConfiguration playerFile;
     private File file;
     
-    public PlayerData(File file) {
+    public PlayerData(File file, EasyGifts easyGifts) {
         this.file = file;
         playerFile = YamlConfiguration.loadConfiguration(file);
+
+        // setting up that they can receive gifts
+        playerFile.set("receiveGifts", true);
+        saveFile(easyGifts);
+    }
+
+    public void toggleSend(EasyGifts easyGifts) {
+        if (playerFile.getBoolean("receiveGifts")) {
+            playerFile.set("receiveGifts", false);
+        } else {
+            playerFile.set("receiveGifts", true);
+        }
+        saveFile(easyGifts);
     }
 
     public void addGift(EasyGifts easyGifts, GUISend gui) {
@@ -71,21 +86,30 @@ public class PlayerData {
             return playerGifts;
         }
 
+
+
+        // adding gifts
         for (String i : giftsSection.getKeys(false)) {
             ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
 
+            // checking for time
+            Date today = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+            boolean canOpen = false;
+            if (today.after(getFutureDate(Integer.parseInt(i))) || today.equals(getFutureDate(Integer.parseInt(i)))) { canOpen = true; }
+
+            // handling skull
             UUID uuid = UUID.fromString(playerFile.getString("gifts." + i + ".senderUUID"));
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
             skullMeta.setOwningPlayer(offlinePlayer);
             skullMeta.setDisplayName(ChatColor.GOLD + ChatColor.BOLD.toString() + "From: " + offlinePlayer.getName());
 
             skullMeta.setLore(Arrays.asList(
-                ChatColor.DARK_GRAY + "====================================",
-                ChatColor.GRAY + "GIFT ID: " + i,
-                ChatColor.GRAY + "OPEN DURING: " + playerFile.get("gifts." + i + ".futureDate").toString(),
-                ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Open the Gift",
-                ChatColor.DARK_GRAY + "===================================="
+                    ChatColor.DARK_GRAY + "=================================================",
+                    ChatColor.GRAY + "GIFT ID: " + i,
+                    ChatColor.GRAY + "OPEN DURING: " + playerFile.get("gifts." + i + ".futureDate").toString(),
+                    (canOpen ? ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Left-Click" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + "To Open the Gift!" : ChatColor.RED + "You still need to wait " + TimeConvert.getDifference(getFutureDate(Integer.parseInt(i)), today)),
+                    ChatColor.DARK_GRAY + "================================================="
             ));
 
             itemStack.setItemMeta(skullMeta);
@@ -96,8 +120,9 @@ public class PlayerData {
         return playerGifts;
     }
 
-    public void removeData(int giftID) {
+    public void removeData(EasyGifts easyGifts, int giftID) {
         playerFile.set("gifts." + giftID, null);
+        saveFile(easyGifts);
     }
 
     private int getNewMaxID() {
@@ -123,6 +148,9 @@ public class PlayerData {
     
     
     // getters
+    public boolean getToggleSend() {
+        return playerFile.getBoolean("receiveGifts");
+    }
     public UUID getPlayerUUID() {
         return UUID.fromString(file.getName().replace(".yml", ""));
     }
@@ -136,7 +164,7 @@ public class PlayerData {
         return playerFile.getString("gifts." + giftID + ".chestTitle");
     }
 
-    public String getPersonalizedMessage(UUID playerUUID, int giftID) {
+    public String getPersonalizedMessage(int giftID) {
         if (playerFile.get("gifts." + giftID + ".personalizedMessage") != null) {
             return playerFile.get("gifts." + giftID + ".personalizedMessage").toString();
         } else {
@@ -144,8 +172,8 @@ public class PlayerData {
         }
     }
 
-    public Date getFutureDate(UUID playerUUID) throws ParseException {
-        return TimeConvert.getDateFromFormat(playerFile.getString("gifts." + getNewMaxID() + ".futureDate"));
+    public Date getFutureDate(int giftID) {
+        return TimeConvert.getDateFromFormat(playerFile.getString("gifts." + giftID + ".futureDate"));
     }
 
     public Inventory getInventory(UUID playerUUID) {

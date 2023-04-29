@@ -12,10 +12,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class GUIOpenHeadInteractionListener implements Listener {
 
     @EventHandler
-    public void onHeadClick(InventoryClickEvent e) {
+    public void onHeadClick(InventoryClickEvent e) throws ParseException {
         Player player = (Player) e.getWhoClicked();
         GUIOpen gui = GUIOpenManager.getGUI(player);
 
@@ -38,8 +43,17 @@ public class GUIOpenHeadInteractionListener implements Listener {
         int giftID = Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§7GIFT ID: ", ""));
 
         // check if current time
-
         PlayerData playerData = GiftDataManager.getPlayerData(player.getUniqueId());
+
+        Date today = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+
+        Date futureDate = playerData.getFutureDate(giftID);
+
+        if (!today.after(futureDate) && !today.equals(futureDate)) {
+            return;
+        }
+
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         gui.openGiftPage(playerData, giftID);
 
     }

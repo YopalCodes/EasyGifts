@@ -16,6 +16,6 @@ public class PlayerConnectListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        GiftDataManager.addFile(e.getPlayer().getUniqueId());
+        GiftDataManager.addFile(e.getPlayer().getUniqueId(), easyGifts);
     }
 }

@@ -1,11 +1,8 @@
 package com.yopal.easygifts;
 
-import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenHeadInteractionListener;
+import com.yopal.easygifts.GUI.giftOpen.listeners.*;
 import com.yopal.easygifts.YML.listeners.PlayerConnectListener;
 import com.yopal.easygifts.commands.GiftCommand;
-import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenPageListener;
-import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenCloseListener;
-import com.yopal.easygifts.GUI.giftOpen.listeners.GUIOpenRestrictionListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.GUISendCloseListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.GUIJoinListener;
 import com.yopal.easygifts.GUI.giftSend.listeners.GUIQuitListener;
@@ -21,6 +18,7 @@ import com.yopal.easygifts.GUI.giftSend.listeners.time.TimeLeftInteractionListen
 import com.yopal.easygifts.GUI.giftSend.listeners.time.TimeRightInteractionListener;
 import com.yopal.easygifts.YML.managers.GiftDataManager;
 import com.yopal.easygifts.GUI.listeners.PlayerQuitListener;
+import com.yopal.easygifts.commands.GiftCommandTabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,6 +34,7 @@ public final class EasyGifts extends JavaPlugin {
 
         // commands
         getCommand("ezg").setExecutor(new GiftCommand(this));
+        getCommand("ezg").setTabCompleter(new GiftCommandTabCompleter());
 
         // YML file
         GiftDataManager.setupFiles(this);
@@ -66,6 +65,7 @@ public final class EasyGifts extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GUIOpenCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIOpenPageListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIOpenHeadInteractionListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GUIOpenGiftInteractionListener(this), this);
 
     }
 
